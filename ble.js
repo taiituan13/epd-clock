@@ -109,7 +109,7 @@
 
     async scanAndConnect(filter = 'supported') {
       if (!navigator.bluetooth) {
-        throw new Error('Trình duyệt không hỗ trợ Web Bluetooth. Dùng Chrome/Edge trên máy tính hoặc Android, iPhone dùng app Bluefy.');
+        throw new Error('Trình duyệt không hỗ trợ Web Bluetooth. Dùng Chrome/Edge trên máy tính hoặc Android. iPhone dùng app Bluefy (Chrome/Safari trên iPhone không có Bluetooth).');
       }
       const device = await navigator.bluetooth.requestDevice(this.scanOptions(filter));
       if (this.device) this.device.removeEventListener('gattserverdisconnected', this._onDisc);
@@ -282,7 +282,9 @@
       const packet = Uint8Array.from(bytes);
       const job = this._queue.then(() => {
         if (!characteristic || !this.connected) throw new Error('Chưa kết nối Bluetooth.');
-        return characteristic.writeValueWithResponse(packet);
+        // Bluefy (iPhone) có thể chỉ có writeValue cũ
+        const writeFn = characteristic.writeValueWithResponse || characteristic.writeValue;
+        return writeFn.call(characteristic, packet);
       });
       this._queue = job.catch(() => {});
       return job;

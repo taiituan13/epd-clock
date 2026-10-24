@@ -119,7 +119,7 @@ Cập nhật {{now.time}} · {{now.weekday}}`,
 
   if (!navigator.bluetooth) {
     $('bt-warning').hidden = false;
-    $('bt-warning').textContent = 'Trình duyệt này không có Web Bluetooth. Mở trang bằng Chrome/Edge (máy tính, Android) hoặc Bluefy (iPhone), qua http://localhost.';
+    $('bt-warning').textContent = 'Trình duyệt này không có Web Bluetooth. Mở trang bằng Chrome/Edge trên máy tính hoặc Android. Trên iPhone, Chrome và Safari đều không có Bluetooth: cài app Bluefy rồi mở trang này trong Bluefy.';
   }
 
   $('btn-scan').onclick = () => guard(() => clock.scanAndConnect($('scan-filter').value));

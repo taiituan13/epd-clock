@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Daily reminder card</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#fff}a:hover{color:#eee}
+</style>
+</helmet>
+<div style="width: 1000px; height: 488px; box-sizing: border-box; background: {{ground}}; color: #ffffff; font-family: 'Space Grotesk', system-ui, sans-serif; padding: 56px 64px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden">
+  <div style="display: flex; justify-content: space-between; align-items: center">
+    <span style="font-size: 44px; font-weight: 500; letter-spacing: 4px">{{dateLine}}</span>
+    <div style="width: 40px; height: 40px; border-radius: 50%; background: #ffffff"></div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 28px">
+    <span style="font-size: 104px; font-weight: 700; line-height: 1; letter-spacing: -2px">Small steps,<br>every day.</span>
+    <div style="width: 160px; height: 12px; background: #000000"></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ground":{"editor":"color","default":"#CC1F1A","options":["#CC1F1A","#000000"]},"$preview":{"width":1000,"height":488}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const now = new Date();
+    return {
+      ground: this.props.ground ?? '#CC1F1A',
+      dateLine: now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).toUpperCase(),
+    };
+  }
+}
+</script>
+</body>
+</html>

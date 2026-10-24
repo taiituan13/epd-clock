@@ -1,4 +1,4 @@
-# Đồng hồ mực điện tử – bản local
+# Đồng hồ mực điện tử (epd-clock)
 
 Tái hiện cách kết nối của https://tanhoangphuc842002-rgb.github.io/ và thêm **Bảng thông tin**: hiển thị dữ liệu riêng của bạn (ví dụ thống kê Claude Code) lên đồng hồ.
 
@@ -28,6 +28,8 @@ Web Bluetooth chỉ chạy trên `https://` hoặc `http://localhost`, không ch
 | `app.js` | Nối giao diện |
 | `server.py` | Phục vụ page + `/data.json` (thống kê Claude Code + `my-info.json`) |
 | `my-info.json` | Thông tin riêng: ghi chú, việc cần làm, ngân sách token… |
+| `tools/` | Script lấy hạn mức Claude (chạy ở `~/.claude/`) và prompt scheduled task |
+| `CLAUDE.md`, `docs/` | Hướng dẫn cho AI, ghi chú firmware |
 
 ## Giao thức (tóm tắt)
 
@@ -73,7 +75,7 @@ Bật bằng cách thêm vào `~/.claude/settings.json`:
 
 Số chỉ được cập nhật khi đang có một phiên Claude Code chạy trong terminal (status line chạy sau mỗi tin nhắn). Khi chưa có file, mẫu hiện `chưa có`.
 
-**Chỉ dùng app desktop?** Status line không chạy trong app. Thay vào đó, tạo một **Scheduled task** trong app (lịch `*/30 * * * *`, prompt lấy từ `scheduled-task-prompt.md`). Mỗi lần chạy, task gọi tool `get_usage` của app rồi chuyển kết quả cho `~/.claude/epd-save-limits.py`, script này ghi vào cùng file `epd-rate-limits.json`. Task chỉ chạy khi app đang mở, và mỗi lần chạy tốn một chút hạn mức.
+**Chỉ dùng app desktop?** Status line không chạy trong app. Thay vào đó, tạo một **Scheduled task** trong app (lịch `*/30 * * * *`, prompt lấy từ `tools/scheduled-task-prompt.md`). Mỗi lần chạy, task gọi tool `get_usage` của app rồi chuyển kết quả cho `~/.claude/epd-save-limits.py`, script này ghi vào cùng file `epd-rate-limits.json`. Task chỉ chạy khi app đang mở, và mỗi lần chạy tốn một chút hạn mức.
 
 `claude.window5h.percent` thì khác: tính theo ngân sách **bạn tự đặt** (`claude_5h_budget_output_tokens`).
 

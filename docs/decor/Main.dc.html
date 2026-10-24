@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Claude spark and today's date</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#000}a:hover{color:#444}
+</style>
+</helmet>
+<div style="width: 1000px; height: 488px; box-sizing: border-box; background: #ffffff; color: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; display: flex; overflow: hidden">
+  <div style="width: 440px; height: 488px; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+    <svg width="340" height="340" viewBox="-50 -50 100 100" aria-hidden="true" style="fill: {{accent}}">
+      <path d="M-5.5 0 L-2.2 -48 A2.2 2.2 0 0 1 2.2 -48 L5.5 0 Z" transform="rotate(-2)"></path>
+      <path d="M-5.5 0 L-2.2 -36 A2.2 2.2 0 0 1 2.2 -36 L5.5 0 Z" transform="rotate(33)"></path>
+      <path d="M-5.5 0 L-2.2 -45 A2.2 2.2 0 0 1 2.2 -45 L5.5 0 Z" transform="rotate(58)"></path>
+      <path d="M-5.5 0 L-2.2 -34 A2.2 2.2 0 0 1 2.2 -34 L5.5 0 Z" transform="rotate(93)"></path>
+      <path d="M-5.5 0 L-2.2 -48 A2.2 2.2 0 0 1 2.2 -48 L5.5 0 Z" transform="rotate(118)"></path>
+      <path d="M-5.5 0 L-2.2 -39 A2.2 2.2 0 0 1 2.2 -39 L5.5 0 Z" transform="rotate(153)"></path>
+      <path d="M-5.5 0 L-2.2 -43 A2.2 2.2 0 0 1 2.2 -43 L5.5 0 Z" transform="rotate(178)"></path>
+      <path d="M-5.5 0 L-2.2 -35 A2.2 2.2 0 0 1 2.2 -35 L5.5 0 Z" transform="rotate(213)"></path>
+      <path d="M-5.5 0 L-2.2 -47 A2.2 2.2 0 0 1 2.2 -47 L5.5 0 Z" transform="rotate(238)"></path>
+      <path d="M-5.5 0 L-2.2 -38 A2.2 2.2 0 0 1 2.2 -38 L5.5 0 Z" transform="rotate(273)"></path>
+      <path d="M-5.5 0 L-2.2 -44 A2.2 2.2 0 0 1 2.2 -44 L5.5 0 Z" transform="rotate(298)"></path>
+      <path d="M-5.5 0 L-2.2 -34 A2.2 2.2 0 0 1 2.2 -34 L5.5 0 Z" transform="rotate(333)"></path>
+      <circle cx="0" cy="0" r="9"></circle>
+    </svg>
+  </div>
+  <div style="flex-grow: 1; padding: 56px 56px 56px 0; display: flex; flex-direction: column; justify-content: space-between">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <span style="font-size: 52px; font-weight: 700; letter-spacing: 6px">{{weekday}}</span>
+      <span style="font-size: 200px; font-weight: 700; line-height: 0.9; letter-spacing: -6px">{{day}}</span>
+      <span style="font-size: 52px; font-weight: 500">{{month}}</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 20px">
+      <div style="width: 64px; height: 8px; background: #000000"></div>
+      <span style="font-size: 44px; font-weight: 700">Keep building.</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#CC1F1A","options":["#CC1F1A","#000000"]},"$preview":{"width":1000,"height":488}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const now = new Date();
+    return {
+      accent: this.props.accent ?? '#CC1F1A',
+      weekday: now.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase(),
+      day: String(now.getDate()),
+      month: now.toLocaleDateString('en-US', { month: 'long' }),
+    };
+  }
+}
+</script>
+</body>
+</html>

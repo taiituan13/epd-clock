@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Claude usage rings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#000}a:hover{color:#444}
+</style>
+</helmet>
+<div style="width: 1000px; height: 488px; box-sizing: border-box; background: #ffffff; color: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; display: flex; align-items: center; gap: 56px; padding: 0 64px; overflow: hidden">
+  <svg width="400" height="400" viewBox="-200 -200 400 400" role="img" aria-label="Week {{week}} percent, 5 hours {{fiveHour}} percent" style="flex-shrink: 0">
+    <circle cx="0" cy="0" r="165" fill="none" stroke="#000000" stroke-width="4"></circle>
+    <circle cx="0" cy="0" r="165" fill="none" stroke="#000000" stroke-width="30" stroke-dasharray="{{weekDash}}" transform="rotate(-90)"></circle>
+    <circle cx="0" cy="0" r="112" fill="none" stroke="#000000" stroke-width="4"></circle>
+    <circle cx="0" cy="0" r="112" fill="none" stroke="{{accent}}" stroke-width="30" stroke-dasharray="{{fiveDash}}" transform="rotate(-90)"></circle>
+    <g style="fill: {{accent}}">
+      <path d="M-4 0 L-1.6 -46 A1.6 1.6 0 0 1 1.6 -46 L4 0 Z" transform="rotate(0)"></path>
+      <path d="M-4 0 L-1.6 -34 A1.6 1.6 0 0 1 1.6 -34 L4 0 Z" transform="rotate(45)"></path>
+      <path d="M-4 0 L-1.6 -46 A1.6 1.6 0 0 1 1.6 -46 L4 0 Z" transform="rotate(90)"></path>
+      <path d="M-4 0 L-1.6 -34 A1.6 1.6 0 0 1 1.6 -34 L4 0 Z" transform="rotate(135)"></path>
+      <path d="M-4 0 L-1.6 -46 A1.6 1.6 0 0 1 1.6 -46 L4 0 Z" transform="rotate(180)"></path>
+      <path d="M-4 0 L-1.6 -34 A1.6 1.6 0 0 1 1.6 -34 L4 0 Z" transform="rotate(225)"></path>
+      <path d="M-4 0 L-1.6 -46 A1.6 1.6 0 0 1 1.6 -46 L4 0 Z" transform="rotate(270)"></path>
+      <path d="M-4 0 L-1.6 -34 A1.6 1.6 0 0 1 1.6 -34 L4 0 Z" transform="rotate(315)"></path>
+      <circle cx="0" cy="0" r="8"></circle>
+    </g>
+  </svg>
+  <div style="display: flex; flex-direction: column; gap: 36px; min-width: 0">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <span style="font-size: 44px; font-weight: 500; letter-spacing: 4px">WEEK</span>
+      <span style="font-size: 112px; font-weight: 700; line-height: 1">{{week}}%</span>
+      <span style="font-size: 40px; font-weight: 500">resets Wed 07:59</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <span style="font-size: 44px; font-weight: 500; letter-spacing: 4px; color: {{accent}}">5 HOURS · {{fiveHour}}%</span>
+      <span style="font-size: 40px; font-weight: 500">resets 03:59</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"week":{"editor":"range","default":60,"min":0,"max":100,"step":1,"unit":"%"},"fiveHour":{"editor":"range","default":3,"min":0,"max":100,"step":1,"unit":"%"},"accent":{"editor":"color","default":"#CC1F1A","options":["#CC1F1A","#000000"]},"$preview":{"width":1000,"height":488}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const week = this.props.week ?? 60;
+    const fiveHour = this.props.fiveHour ?? 3;
+    const dash = (pct, r) => {
+      const c = 2 * Math.PI * r;
+      const on = Math.max(0, Math.min(100, pct)) / 100 * c;
+      return `${on.toFixed(1)} ${c.toFixed(1)}`;
+    };
+    return {
+      accent: this.props.accent ?? '#CC1F1A',
+      week,
+      fiveHour,
+      weekDash: dash(week, 165),
+      fiveDash: dash(fiveHour, 112),
+    };
+  }
+}
+</script>
+</body>
+</html>

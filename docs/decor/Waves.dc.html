@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Seigaiha waves and red sun</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#000}a:hover{color:#444}
+</style>
+</helmet>
+<div style="position: relative; width: 1000px; height: 488px; background: #ffffff; color: #000000; font-family: 'Space Grotesk', system-ui, sans-serif; overflow: hidden">
+  <svg width="1000" height="488" viewBox="0 0 1000 488" aria-hidden="true" style="position: absolute; left: 0; top: 0">
+    <defs>
+      <pattern id="seigaiha" x="0" y="0" width="80" height="40" patternUnits="userSpaceOnUse">
+        <g fill="#ffffff" stroke="#000000" stroke-width="4">
+          <circle cx="40" cy="0" r="38"></circle><circle cx="40" cy="0" r="28"></circle><circle cx="40" cy="0" r="18"></circle><circle cx="40" cy="0" r="8"></circle>
+          <circle cx="0" cy="20" r="38"></circle><circle cx="0" cy="20" r="28"></circle><circle cx="0" cy="20" r="18"></circle><circle cx="0" cy="20" r="8"></circle>
+          <circle cx="80" cy="20" r="38"></circle><circle cx="80" cy="20" r="28"></circle><circle cx="80" cy="20" r="18"></circle><circle cx="80" cy="20" r="8"></circle>
+          <circle cx="40" cy="40" r="38"></circle><circle cx="40" cy="40" r="28"></circle><circle cx="40" cy="40" r="18"></circle><circle cx="40" cy="40" r="8"></circle>
+        </g>
+      </pattern>
+    </defs>
+    <circle cx="790" cy="276" r="112" fill="{{accent}}"></circle>
+    <rect x="0" y="276" width="1000" height="212" fill="url(#seigaiha)"></rect>
+    <rect x="0" y="272" width="1000" height="6" fill="#000000"></rect>
+  </svg>
+  <div style="position: absolute; left: 64px; top: 52px; display: flex; flex-direction: column; gap: 8px">
+    <span style="font-size: 44px; font-weight: 500; letter-spacing: 4px">{{dateLine}}</span>
+    <span style="font-size: 96px; font-weight: 700; line-height: 1">Calm seas.</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#CC1F1A","options":["#CC1F1A","#000000"]},"$preview":{"width":1000,"height":488}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const now = new Date();
+    return {
+      accent: this.props.accent ?? '#CC1F1A',
+      dateLine: now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase(),
+    };
+  }
+}
+</script>
+</body>
+</html>

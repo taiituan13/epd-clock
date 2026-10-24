@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pixel cherry bonsai</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#000}a:hover{color:#444}
+</style>
+</helmet>
+<div style="width: 1000px; height: 488px; box-sizing: border-box; background: #ffffff; color: #000000; font-family: 'Silkscreen', monospace; display: flex; align-items: center; gap: 48px; padding: 0 56px; overflow: hidden">
+  <div role="img" aria-label="Pixel art cherry blossom bonsai in a pot" style="position: relative; width: 480px; height: 360px; flex-shrink: 0">
+    <sc-for list="{{cells}}" as="c" hint-placeholder-count="120">
+      <div style="position: absolute; left: {{c.x}}px; top: {{c.y}}px; width: 24px; height: 24px; background: {{c.color}}"></div>
+    </sc-for>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 28px; min-width: 0">
+    <span style="font-size: 40px">{{dateLine}}</span>
+    <span style="font-size: 72px; font-weight: 700; line-height: 1.05">Grow<br>slowly.</span>
+    <div style="display: flex; gap: 12px">
+      <div style="width: 24px; height: 24px; background: {{accent}}"></div>
+      <div style="width: 24px; height: 24px; background: #000000"></div>
+      <div style="width: 24px; height: 24px; background: {{accent}}"></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#CC1F1A","options":["#CC1F1A","#000000"]},"$preview":{"width":1000,"height":488}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accent ?? '#CC1F1A';
+    // r = blossom, k = branch / pot, . = empty; 20 columns per row
+    const art = [
+      '......rr...rr.......',
+      '.....rrrr.rrrr..r...',
+      '...rrrrkrrrrkrrrrr..',
+      '..rrrrrrkkrrkkrrrr..',
+      '...rrr..kkkk..rrr...',
+      '......k..kk..k......',
+      '.......k.kk.k.......',
+      '.........kk.........',
+      '........kk..........',
+      '.........kk.........',
+      '.........kk.........',
+      '...kkkkkkkkkkkkkk...',
+      '....k..........k....',
+      '....k.r..r..r..k....',
+      '.....kkkkkkkkkk.....',
+    ];
+    const cells = [];
+    art.forEach((row, y) => {
+      [...row].forEach((ch, x) => {
+        if (ch === '.') return;
+        cells.push({ x: x * 24, y: y * 24, color: ch === 'r' ? accent : '#000000' });
+      });
+    });
+    const now = new Date();
+    return {
+      accent,
+      cells,
+      dateLine: now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+    };
+  }
+}
+</script>
+</body>
+</html>

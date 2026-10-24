@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tonight's moon phase</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#fff}a:hover{color:#ddd}
+</style>
+</helmet>
+<div style="width: 1000px; height: 488px; box-sizing: border-box; background: #000000; color: #ffffff; font-family: 'Space Grotesk', system-ui, sans-serif; display: flex; align-items: center; gap: 56px; padding: 0 64px; overflow: hidden">
+  <svg width="340" height="340" viewBox="-170 -170 340 340" role="img" aria-label="Moon phase: {{phaseName}}" style="flex-shrink: 0">
+    <circle cx="0" cy="0" r="150" fill="#000000" stroke="{{accent}}" stroke-width="6"></circle>
+    <path d="{{moonPath}}" fill="#ffffff"></path>
+    <circle cx="-150" cy="-150" r="5" fill="#ffffff"></circle>
+    <circle cx="150" cy="-120" r="4" fill="#ffffff"></circle>
+    <circle cx="140" cy="150" r="5" fill="#ffffff"></circle>
+  </svg>
+  <div style="display: flex; flex-direction: column; gap: 20px; min-width: 0">
+    <span style="font-size: 44px; font-weight: 500; letter-spacing: 4px">{{dateLine}}</span>
+    <span style="font-size: 76px; font-weight: 700; line-height: 1">{{phaseName}}</span>
+    <div style="display: flex; align-items: center; gap: 18px">
+      <div style="width: 48px; height: 8px; background: {{accent}}"></div>
+      <span style="font-size: 44px; font-weight: 700; color: {{accent}}">Moon age {{age}} days</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#CC1F1A","options":["#CC1F1A","#FFFFFF"]},"$preview":{"width":1000,"height":488}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const now = new Date();
+    const SYNODIC = 29.530588853;
+    const ref = Date.UTC(2000, 0, 6, 18, 14); // a known new moon
+    const days = (now.getTime() - ref) / 86400000;
+    const p = ((days % SYNODIC) + SYNODIC) % SYNODIC / SYNODIC; // 0 = new, 0.5 = full
+    const R = 150;
+    const rx = Math.abs(Math.cos(2 * Math.PI * p)) * R;
+    let d;
+    if (p < 0.5) {
+      // lit on the right; crescent bulges right, gibbous bulges left
+      d = `M0 ${-R} A${R} ${R} 0 0 1 0 ${R} A${rx} ${R} 0 0 ${p < 0.25 ? 0 : 1} 0 ${-R} Z`;
+    } else {
+      d = `M0 ${-R} A${R} ${R} 0 0 0 0 ${R} A${rx} ${R} 0 0 ${p > 0.75 ? 1 : 0} 0 ${-R} Z`;
+    }
+    const names = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous',
+      'Full Moon', 'Waning Gibbous', 'Last Quarter', 'Waning Crescent'];
+    return {
+      accent: this.props.accent ?? '#CC1F1A',
+      moonPath: d,
+      phaseName: names[Math.round(p * 8) % 8],
+      age: Math.round(p * SYNODIC),
+      dateLine: now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase(),
+    };
+  }
+}
+</script>
+</body>
+</html>

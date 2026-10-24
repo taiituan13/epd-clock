@@ -126,3 +126,5 @@ progress { width: 100%; height: 8px; accent-color: var(--accent); }
 .log .error { font-weight: 700; }
 .log .rx, .log .tx { color: var(--muted); }
 .da-only[hidden] { display: none; }
+
+[hidden] { display: none !important; }

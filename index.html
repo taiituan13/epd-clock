@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Đồng hồ mực điện tử</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Đồng hồ mực điện tử</h1>
+      <p class="sub">Điều khiển qua Bluetooth · bản local tự custom</p>
+    </div>
+    <div id="status-pill" class="pill">Chưa kết nối</div>
+  </header>
+
+  <main class="grid">
+    <section class="col">
+      <div class="card">
+        <h2>Kết nối</h2>
+        <div class="row">
+          <select id="scan-filter" aria-label="Bộ lọc quét">
+            <option value="supported">Đồng hồ hỗ trợ</option>
+            <option value="nrf">NRF_EPD</option>
+            <option value="dlg">DLG-CLOCK</option>
+            <option value="all">Tất cả thiết bị</option>
+          </select>
+          <button id="btn-scan" class="primary">Quét &amp; kết nối</button>
+        </div>
+        <div class="row">
+          <button id="btn-reconnect">Kết nối lại</button>
+          <button id="btn-disconnect">Ngắt</button>
+        </div>
+        <dl class="info">
+          <dt>Thiết bị</dt><dd id="i-name">–</dd>
+          <dt>Giao thức</dt><dd id="i-proto">–</dd>
+          <dt>Firmware</dt><dd id="i-fw">–</dd>
+          <dt>Màn hình</dt><dd id="i-panel">–</dd>
+          <dt>Chế độ</dt><dd id="i-mode">–</dd>
+          <dt>Pin</dt><dd id="i-batt">–</dd>
+        </dl>
+        <p id="bt-warning" class="warn" hidden></p>
+      </div>
+
+      <div class="card">
+        <h2>Giờ &amp; chế độ</h2>
+        <div class="row">
+          <button id="btn-time" class="primary">Đồng bộ giờ</button>
+          <label class="inline">Đầu tuần
+            <select id="week-start"><option value="1">Thứ 2</option><option value="0">Chủ Nhật</option></select>
+          </label>
+        </div>
+        <label class="inline da-only">Bù giờ (DA14585)
+          <input id="hour-offset" type="number" min="-12" max="24" value="0">
+        </label>
+        <div class="row">
+          <button id="btn-clock">Đồng hồ</button>
+          <button id="btn-calendar">Lịch</button>
+        </div>
+        <p class="hint">Bấm “Đồng hồ” nhiều lần để đổi mặt đồng hồ (nRF52).</p>
+        <details>
+          <summary>Mode tuỳ chỉnh / lệnh thô</summary>
+          <div class="row">
+            <input id="mode-num" type="number" min="0" max="127" value="2" aria-label="Số mode">
+            <button id="btn-mode-num">Gửi mode</button>
+          </div>
+          <div class="row">
+            <input id="raw-hex" placeholder="hex, vd: 05" aria-label="Lệnh hex">
+            <select id="raw-target"><option value="epd">EPD</option><option value="rxtx">RXTX (DA)</option></select>
+            <button id="btn-raw">Gửi</button>
+          </div>
+          <p class="hint">nRF52: 01 INIT · 05 REFRESH · 20 SET_TIME · 30 ghi ảnh. DA14585: dd… cài giờ · e1xx mode · e2 lưu.</p>
+        </details>
+      </div>
+
+      <div class="card">
+        <h2>Nhật ký</h2>
+        <div id="log" class="log" aria-live="polite"></div>
+        <button id="btn-clear-log" class="ghost">Xoá nhật ký</button>
+      </div>
+    </section>
+
+    <section class="col wide">
+      <div class="card">
+        <div class="row between">
+          <h2>Thiết kế màn hình</h2>
+          <select id="profile" aria-label="Kích thước màn hình"></select>
+        </div>
+
+        <div class="tabs" role="tablist">
+          <button role="tab" class="tab active" data-tab="dash">Bảng thông tin</button>
+          <button role="tab" class="tab" data-tab="free">Tự do</button>
+        </div>
+
+        <div class="preview-wrap">
+          <canvas id="preview" width="250" height="128"></canvas>
+        </div>
+        <div class="row options">
+          <label><input type="checkbox" id="opt-red" checked> Dùng màu đỏ</label>
+          <label><input type="checkbox" id="opt-dither"> Dither (ảnh chụp)</label>
+          <label><input type="checkbox" id="opt-rotate"> Xoay 180°</label>
+          <label class="inline">Ngưỡng <input type="range" id="opt-threshold" min="40" max="220" value="128"></label>
+        </div>
+
+        <!-- Bảng thông tin -->
+        <div class="pane" data-pane="dash">
+          <div class="row">
+            <label class="inline">Mẫu
+              <select id="dash-preset"></select>
+            </label>
+            <label class="inline">Nguồn
+              <select id="dash-source">
+                <option value="url">URL JSON</option>
+                <option value="paste">Dán JSON</option>
+              </select>
+            </label>
+          </div>
+          <div class="row" id="dash-url-row">
+            <input id="dash-url" value="data.json" aria-label="URL dữ liệu">
+            <button id="btn-fetch">Lấy dữ liệu</button>
+          </div>
+          <textarea id="dash-json" rows="6" spellcheck="false" hidden aria-label="Dữ liệu JSON"></textarea>
+          <label class="block">Nội dung hiển thị
+            <textarea id="dash-template" rows="8" spellcheck="false"></textarea>
+          </label>
+          <div class="row options">
+            <label class="inline">Lề <input type="number" id="dash-margin" min="0" max="40" value="4"> px</label>
+            <label class="inline">Lề dưới <input type="number" id="dash-margin-bottom" min="0" max="40" value="10"> px</label>
+            <span class="hint">Tăng nếu viền máy che mất chữ.</span>
+          </div>
+          <details class="hint">
+            <summary>Cú pháp mẫu</summary>
+            <ul>
+              <li><code>{{claude.today.messages}}</code> lấy giá trị từ JSON; <code>{{x|k}}</code> rút gọn 12.3k, <code>|num</code>, <code>|pct</code>, <code>|time</code>, <code>|date</code>, <code>|upper</code></li>
+              <li><code>{{now.time}}</code> <code>{{now.date}}</code> <code>{{now.weekday}}</code> giờ trên máy lúc gửi</li>
+              <li><code>&gt; Tiêu đề | phải</code> thanh tiêu đề đen · <code># Chữ lớn</code> · <code>## Chữ vừa</code> · <code>---</code> kẻ ngang</li>
+              <li><code>Trái | Phải</code> hai cột · <code>[bar:73] Nhãn</code> thanh tiến độ · <code>!</code> đầu dòng để tô đỏ</li>
+            </ul>
+          </details>
+          <div class="row auto">
+            <label><input type="checkbox" id="auto-on"> Tự động cập nhật mỗi</label>
+            <input id="auto-min" type="number" min="5" value="30" aria-label="Phút"> phút
+            <span id="auto-status" class="hint"></span>
+          </div>
+        </div>
+
+        <!-- Tự do -->
+        <div class="pane" data-pane="free" hidden>
+          <div class="row">
+            <label class="inline">Nền
+              <select id="free-bg"><option value="#ffffff">Trắng</option><option value="#000000">Đen</option><option value="#ff0000">Đỏ</option></select>
+            </label>
+            <label class="inline">Ảnh <input type="file" id="free-image" accept="image/*"></label>
+            <button id="free-clear-image" class="ghost">Bỏ ảnh</button>
+          </div>
+          <div class="row">
+            <label class="inline">Khớp
+              <select id="free-fit"><option value="cover">Phủ kín</option><option value="contain">Vừa khung</option></select>
+            </label>
+            <label class="inline">Zoom <input type="range" id="free-zoom" min="0.3" max="3" step="0.05" value="1"></label>
+          </div>
+          <div class="row between">
+            <strong>Lớp chữ</strong>
+            <button id="free-add-text">+ Thêm chữ</button>
+          </div>
+          <div id="free-texts"></div>
+          <p class="hint">Kéo chữ trực tiếp trên khung xem trước để di chuyển.</p>
+        </div>
+
+        <div class="row upload">
+          <button id="btn-upload" class="primary big">Gửi lên đồng hồ</button>
+          <button id="btn-download" class="ghost">Tải PNG</button>
+        </div>
+        <progress id="upload-progress" max="100" value="0"></progress>
+        <p id="upload-status" class="hint"></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="ble.js"></script>
+  <script src="designer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

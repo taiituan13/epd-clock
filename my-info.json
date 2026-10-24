@@ -1,0 +1,6 @@
+{
+  "title": "Token ra hôm nay",
+  "note": "Drink some water!",
+  "todo": ["☐ Gửi báo cáo", "☐ Review PR", "☐ Đi chợ"],
+  "claude_5h_budget_output_tokens": 500000
+}

@@ -402,9 +402,11 @@
       const is290 = key === 'nrf52_2.9';
       const is213 = key === 'nrf52_2.13';
       const rowMajor = key === 'nrf52_4.2' || key === 'nrf52_4.2bw' || key === 'nrf52_7.5';
-      const hasRed = key === 'nrf52_4.2' || key === 'nrf52_7.5' || is290 || (is213 && this.modelId === 2);
+      // Màn 2.13" ba màu có máy báo model khác 2: vẫn ghi lớp đỏ, nếu không RAM đỏ giữ rác → hạt đỏ khắp màn
+      const hasRed = key === 'nrf52_4.2' || key === 'nrf52_7.5' || is290 || is213;
       const stopClock = is290 || (is213 && this.modelId === 2);
 
+      this.log(`Gửi ${hasRed ? '2 lớp (đen + đỏ)' : '1 lớp (đen)'} · model ${this.modelId}, panel ${this.panel === null ? '?' : '0x' + this.panel.toString(16)}`);
       progress(0, 'Đang khởi tạo màn hình…');
       if (stopClock) { await this._nrf52SetTime(0); await delay(150); }
       if (is290) {

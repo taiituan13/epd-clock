@@ -18,6 +18,7 @@ mức dùng Claude, lên màn. Dự án cá nhân, không thuộc nhóm UrbanB.
   - tự kết nối lại khi mất kết nối (2→5→15→30→60 giây, trừ khi người dùng bấm Ngắt);
   - icon `[icon:claude]` (ngôi sao tia, màu đỏ);
   - hạn mức Claude thật (5 giờ / tuần) qua scheduled task, xem bên dưới.
+- **Lớp đỏ màn 2.13"**: luôn gửi cả hai lớp. Máy của người dùng báo model khác 2; trước đây page chỉ gửi lớp đen, RAM đỏ giữ rác nên hiện hạt đỏ khắp màn (đã sửa 25/10, người dùng xác nhận sạch). Log khi gửi ghi model/panel.
 - **iPhone**: Chrome/Safari trên iOS không có Web Bluetooth, chỉ chạy qua app **Bluefy**. `write()` trong `ble.js` tự dùng `writeValue` khi trình duyệt thiếu `writeValueWithResponse`. Chưa thử với Bluefy thật.
 - **Mẫu decor**: 6 mẫu thiết kế (Claude Spark, tuần trăng, vòng hạn mức, bonsai pixel, sóng Seigaiha, câu nhắc) nằm trên canvas Claude Design https://claude.ai/artifact/SybiphRJqKm43eyAvwFB5a (riêng tư). **Chưa mẫu nào được đưa vào page.** Bản sao mã nguồn các mẫu: `docs/decor/*.dc.html` (vẽ ở 1000×488 = 4× màn).
 
